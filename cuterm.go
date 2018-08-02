@@ -4,13 +4,22 @@ import "github.com/nsf/termbox-go"
 import "math/rand"
 import "fmt"
 
-var moves = [18]string{
+var move = [18]string{
     "F", "F'", "F2",
     "R", "R'", "R2",
     "L", "L'", "L2",
     "U", "U'", "U2",
     "D", "D'", "D2",
     "B", "B'", "B2",
+}
+
+func scramble() []string {
+    var s []string
+    for i := 0; i < 30; i ++ {
+        s = append(s, move[rand.Intn(18)])
+        // add logic for redundancies
+    }
+    return s
 }
 
 func main() {
@@ -28,10 +37,6 @@ mainloop:
                 break mainloop
             }
         }
-        for i := 0; i < 25; i++ {
-            move := rand.Intn(18)
-            fmt.Print(moves[move]+" ")
-        }
-        fmt.Println()
+        fmt.Println(scramble())
     }
 }
