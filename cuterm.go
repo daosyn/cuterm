@@ -1,6 +1,7 @@
 package main
 
 import "github.com/nsf/termbox-go"
+import "math/rand"
 import "fmt"
 
 var moves = [18]string{
@@ -27,6 +28,10 @@ mainloop:
                 break mainloop
             }
         }
-        fmt.Println(moves)
+        for i := 0; i < 25; i++ {
+            move := rand.Intn(18)
+            fmt.Print(moves[move]+" ")
+        }
+        fmt.Println()
     }
 }
