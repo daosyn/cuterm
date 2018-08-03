@@ -1,0 +1,11 @@
+# cuterm
+- [x] generate scramble
+- [ ] display cube layout
+- [ ] start timer
+- [ ] stop timer
+- [ ] keep track of times
+- [ ] start inspection timer
+- [ ] hold before start
+- [ ] edit options
+- [ ] mark times as DNF or penalty
+- [ ] ...anything else
