@@ -2,6 +2,7 @@ package main
 
 import "github.com/nsf/termbox-go"
 import "math/rand"
+import "time"
 import "fmt"
 
 var mod = [3]string{"", "'", "2"}
@@ -31,6 +32,17 @@ func scramble() []string {
 	return s
 }
 
+func timer() {
+    ticker := time.NewTimer(time.Millisecond * 500)
+    defer ticker.Stop()
+    go func() {
+        for t := range ticker.C {
+            fmt.Println("Tick at ", t)
+        }
+    } ()
+    time.Sleep(1500 * time.Millisecond)
+}
+
 func main() {
 	err := termbox.Init()
 	if err != nil {
@@ -47,5 +59,6 @@ loop:
 			}
 		}
 		fmt.Println(scramble())
+        timer()
 	}
 }
