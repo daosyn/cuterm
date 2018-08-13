@@ -1,9 +1,11 @@
 package main
 
-import "github.com/nsf/termbox-go"
-import "math/rand"
-import "time"
-import "fmt"
+import (
+	"fmt"
+	"github.com/nsf/termbox-go"
+	"math/rand"
+	"time"
+)
 
 var mod = [3]string{"", "'", "2"}
 var x = [2]string{"R", "L"}
@@ -33,14 +35,13 @@ func scramble() []string {
 }
 
 func timer() {
-    ticker := time.NewTimer(time.Millisecond * 500)
-    defer ticker.Stop()
-    go func() {
-        for t := range ticker.C {
-            fmt.Println("Tick at ", t)
-        }
-    } ()
-    time.Sleep(1500 * time.Millisecond)
+	ticker := time.NewTimer(time.Second)
+	defer ticker.Stop()
+	time.Sleep(10 * time.Second)
+	for {
+		t := <-ticker.C
+		fmt.Println("Current time: ", t)
+	}
 }
 
 func main() {
@@ -59,6 +60,6 @@ loop:
 			}
 		}
 		fmt.Println(scramble())
-        timer()
+		// timer()
 	}
 }
