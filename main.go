@@ -1,47 +1,21 @@
 package main
 
 import (
+    "github.com/daosyn/cuterm/pkg/scrambler"
 	"fmt"
 	"github.com/nsf/termbox-go"
-	"math/rand"
 	"time"
 )
 
-var mod = [3]string{"", "'", "2"}
-var x = [2]string{"R", "L"}
-var y = [2]string{"U", "D"}
-var z = [2]string{"F", "B"}
-
-func scramble() []string {
-	var s []string
-	curr := -1
-	for i := 0; i < 25; i++ {
-		next := rand.Intn(3)
-		if next != curr {
-			switch next {
-			case 0:
-				s = append(s, x[rand.Intn(2)]+mod[rand.Intn(3)])
-			case 1:
-				s = append(s, y[rand.Intn(2)]+mod[rand.Intn(3)])
-			case 2:
-				s = append(s, z[rand.Intn(2)]+mod[rand.Intn(3)])
-			}
-			curr = next
-		} else {
-			i--
-		}
-	}
-	return s
-}
-
 func timer() {
-	ticker := time.NewTimer(time.Second)
-	defer ticker.Stop()
-	time.Sleep(10 * time.Second)
-	for {
-		t := <-ticker.C
-		fmt.Println("Current time: ", t)
-	}
+	ticker := time.NewTicker(time.Millisecond)
+	go func() {
+		for t := range ticker.C {
+			fmt.Println("Current time: ", t)
+		}
+	}()
+    time.Sleep(50 * time.Second)
+    ticker.Stop()
 }
 
 func main() {
@@ -59,7 +33,7 @@ loop:
 				break loop
 			}
 		}
-		fmt.Println(scramble())
-		// timer()
+		fmt.Println(scrambler.NewScramble())
+        timer()
 	}
 }
