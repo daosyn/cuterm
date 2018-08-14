@@ -10,7 +10,9 @@ func timer() {
 	ticker := time.NewTicker(time.Millisecond)
 	go func() {
 		for t := range ticker.C {
-			termbox.SetCell(100, 100, []rune(t.String())[0], termbox.ColorDefault, termbox.ColorDefault)
+			// TODO write to center of screen and update
+			termbox.SetCell(4, 4, []rune(t.String())[5], termbox.ColorDefault, termbox.ColorDefault)
+			termbox.Flush()
 		}
 	}()
 	time.Sleep(10 * time.Millisecond)
@@ -23,15 +25,16 @@ func main() {
 		panic(err)
 	}
 	defer termbox.Close()
-	termbox.SetInputMode(termbox.InputEsc)
 	scramble := scrambler.NewScramble()
-	x := 50
-	y := 50
+	x := 0 // TODO get x and y from size
+	y := 0
 	for _, c := range scramble {
+		// TODO write to center of screen
+		// iterate through each array string
 		termbox.SetCell(x, y, []rune(c)[0], termbox.ColorDefault, termbox.ColorDefault)
 		x++
-		y++
 	}
+	termbox.Flush()
 loop:
 	for {
 		switch ev := termbox.PollEvent(); ev.Type {
