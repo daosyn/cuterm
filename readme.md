@@ -1,7 +1,7 @@
 # cuterm
 - [x] generate scramble
 - [ ] display cube layout
-- [ ] start timer
+- [x] start timer
 - [ ] stop timer
 - [ ] keep track of times
 - [ ] start inspection timer
