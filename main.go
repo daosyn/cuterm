@@ -6,16 +6,22 @@ import (
 	"time"
 )
 
+func setCells(x, y int, msg string, fg, bg termbox.Attribute) {
+	for _, c := range msg {
+		termbox.SetCell(x, y, c, fg, bg)
+		x++
+	}
+	termbox.Flush()
+}
+
 func timer() {
 	ticker := time.NewTicker(time.Millisecond)
 	go func() {
 		for t := range ticker.C {
-			// TODO write to center of screen and update
-			termbox.SetCell(4, 4, []rune(t.String())[5], termbox.ColorDefault, termbox.ColorDefault)
-			termbox.Flush()
+			setCells(4, 4, t.String(), termbox.ColorDefault, termbox.ColorDefault)
 		}
 	}()
-	time.Sleep(10 * time.Millisecond)
+	time.Sleep(5 * time.Second)
 	ticker.Stop()
 }
 
@@ -28,13 +34,12 @@ func main() {
 	scramble := scrambler.NewScramble()
 	x := 0 // TODO get x and y from size
 	y := 0
-	for _, c := range scramble {
+	for _, s := range scramble {
 		// TODO write to center of screen
 		// iterate through each array string
-		termbox.SetCell(x, y, []rune(c)[0], termbox.ColorDefault, termbox.ColorDefault)
-		x++
+		setCells(x, y, s, termbox.ColorDefault, termbox.ColorDefault)
+		x += 3
 	}
-	termbox.Flush()
 loop:
 	for {
 		switch ev := termbox.PollEvent(); ev.Type {
