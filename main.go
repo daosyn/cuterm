@@ -14,7 +14,7 @@ func timer() {
 			fmt.Println("Current time: ", t)
 		}
 	}()
-	time.Sleep(50 * time.Second)
+	time.Sleep(10 * time.Millisecond)
 	ticker.Stop()
 }
 
@@ -25,6 +25,15 @@ func main() {
 	}
 	defer termbox.Close()
 	termbox.SetInputMode(termbox.InputEsc)
+    scramble := scrambler.NewScramble()
+    x := 50
+    y := 50
+    for _, c := range scramble {
+        fmt.Println(c)
+        termbox.SetCell(x, y, 't', termbox.ColorDefault, termbox.ColorDefault)
+        x++
+        y++
+    }
 loop:
 	for {
 		switch ev := termbox.PollEvent(); ev.Type {
