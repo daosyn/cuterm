@@ -1,8 +1,8 @@
 package main
 
 import (
-    "github.com/daosyn/cuterm/pkg/scrambler"
 	"fmt"
+	"github.com/daosyn/cuterm/pkg/scrambler"
 	"github.com/nsf/termbox-go"
 	"time"
 )
@@ -14,8 +14,8 @@ func timer() {
 			fmt.Println("Current time: ", t)
 		}
 	}()
-    time.Sleep(50 * time.Second)
-    ticker.Stop()
+	time.Sleep(50 * time.Second)
+	ticker.Stop()
 }
 
 func main() {
@@ -34,6 +34,6 @@ loop:
 			}
 		}
 		fmt.Println(scrambler.NewScramble())
-        timer()
+		timer()
 	}
 }
