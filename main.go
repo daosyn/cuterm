@@ -3,9 +3,11 @@ package main
 import (
 	"github.com/daosyn/cuterm/pkg/scrambler"
 	"github.com/nsf/termbox-go"
-	"strconv"
 	"time"
 )
+
+var startTime, stopTime time.Time
+var times []time.Duration
 
 func setCells(x, y int, msg string, fg, bg termbox.Attribute) {
 	for _, c := range msg {
@@ -15,20 +17,22 @@ func setCells(x, y int, msg string, fg, bg termbox.Attribute) {
 	termbox.Flush()
 }
 
-func startTimer() *time.Ticker {
-	// start := time.Now()
-	timer := 0.000
-	ticker := time.NewTicker(time.Millisecond)
+func startStopwatch() {
+	startTime = time.Now()
+	stopTime = time.Time{}
 	go func() {
-		for range ticker.C {
-			timer += 0.001
-			setCells(4, 4, strconv.FormatFloat(timer, 'f', -1, 32), termbox.ColorDefault, termbox.ColorDefault)
+		for stopTime.IsZero() {
+			setCells(4, 4, time.Since(startTime).String(), termbox.ColorDefault, termbox.ColorDefault)
 		}
 	}()
-	return ticker
 }
 
-var ticker *time.Ticker
+func stopStopwatch() {
+	stopTime = time.Now()
+	solveTime := stopTime.Sub(startTime)
+	times = append(times, solveTime)
+	startTime = time.Time{}
+}
 
 func intialize() {
 	scramble := scrambler.NewScramble()
@@ -42,10 +46,10 @@ func intialize() {
 }
 
 func handleKeyEvent() {
-	if ticker == nil {
-		ticker = startTimer()
+	if startTime.IsZero() {
+		startStopwatch()
 	} else {
-		ticker.Stop()
+		stopStopwatch()
 	}
 }
 
