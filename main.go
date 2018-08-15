@@ -8,6 +8,7 @@ import (
 
 var startTime, stopTime time.Time
 var times []time.Duration
+var width, height int
 
 func setCells(x, y int, msg string, fg, bg termbox.Attribute) {
 	for _, c := range msg {
@@ -22,7 +23,7 @@ func startStopwatch() {
 	stopTime = time.Time{}
 	go func() {
 		for stopTime.IsZero() {
-			setCells(4, 4, time.Since(startTime).String(), termbox.ColorDefault, termbox.ColorDefault)
+			setCells(width/3, height/3, time.Since(startTime).String(), termbox.ColorDefault, termbox.ColorDefault)
 		}
 	}()
 }
@@ -35,9 +36,11 @@ func stopStopwatch() {
 }
 
 func initialize() {
+	width, height = termbox.Size()
+
+	x := width/2 - 30
+	y := height/2 - 3
 	scramble := scrambler.NewScramble()
-	x := 0 // TODO get x and y from size
-	y := 0
 	for _, s := range scramble {
 		// TODO write to center of screen
 		setCells(x, y, s, termbox.ColorDefault, termbox.ColorDefault)
@@ -58,16 +61,15 @@ func mainloop() {
 		switch ev := termbox.PollEvent(); ev.Type {
 		case termbox.EventKey:
 			if ev.Key == termbox.KeyEsc {
-				// close application
 				return
 			}
 			if ev.Key == termbox.KeySpace {
-				// core logic
 				handleKeyEvent()
 			}
 		case termbox.EventResize:
-			// adjust size
+			// TODO draw everything again
 			termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
+			width, height = termbox.Size()
 		case termbox.EventError:
 			panic(ev.Err)
 		}
