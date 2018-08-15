@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/daosyn/cuterm/pkg/scrambler"
 	"github.com/nsf/termbox-go"
+	"strconv"
 	"time"
 )
 
@@ -14,15 +15,59 @@ func setCells(x, y int, msg string, fg, bg termbox.Attribute) {
 	termbox.Flush()
 }
 
-func timer() {
+func startTimer() *time.Ticker {
+	// start := time.Now()
+	timer := 0.000
 	ticker := time.NewTicker(time.Millisecond)
 	go func() {
-		for t := range ticker.C {
-			setCells(4, 4, t.String(), termbox.ColorDefault, termbox.ColorDefault)
+		for range ticker.C {
+			timer += 0.001
+			setCells(4, 4, strconv.FormatFloat(timer, 'f', -1, 32), termbox.ColorDefault, termbox.ColorDefault)
 		}
 	}()
-	time.Sleep(5 * time.Second)
-	ticker.Stop()
+	return ticker
+}
+
+var ticker *time.Ticker
+
+func intialize() {
+	scramble := scrambler.NewScramble()
+	x := 0 // TODO get x and y from size
+	y := 0
+	for _, s := range scramble {
+		// TODO write to center of screen
+		setCells(x, y, s, termbox.ColorDefault, termbox.ColorDefault)
+		x += 3
+	}
+}
+
+func handleKeyEvent() {
+	if ticker == nil {
+		ticker = startTimer()
+	} else {
+		ticker.Stop()
+	}
+}
+
+func mainloop() {
+	for {
+		switch ev := termbox.PollEvent(); ev.Type {
+		case termbox.EventKey:
+			if ev.Key == termbox.KeyEsc {
+				// close application
+				return
+			}
+			if ev.Key == termbox.KeySpace {
+				// core logic
+				handleKeyEvent()
+			}
+		case termbox.EventResize:
+			// adjust size
+			termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
+		case termbox.EventError:
+			panic(ev.Err)
+		}
+	}
 }
 
 func main() {
@@ -31,23 +76,6 @@ func main() {
 		panic(err)
 	}
 	defer termbox.Close()
-	scramble := scrambler.NewScramble()
-	x := 0 // TODO get x and y from size
-	y := 0
-	for _, s := range scramble {
-		// TODO write to center of screen
-		// iterate through each array string
-		setCells(x, y, s, termbox.ColorDefault, termbox.ColorDefault)
-		x += 3
-	}
-loop:
-	for {
-		switch ev := termbox.PollEvent(); ev.Type {
-		case termbox.EventKey:
-			if ev.Key == termbox.KeyEsc {
-				break loop
-			}
-		}
-		timer()
-	}
+	intialize()
+	mainloop()
 }

@@ -2,7 +2,7 @@
 - [x] generate scramble
 - [ ] display cube layout
 - [x] start timer
-- [ ] stop timer
+- [x] stop timer
 - [ ] keep track of times
 - [ ] start inspection timer
 - [ ] hold before start

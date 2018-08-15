@@ -4,12 +4,15 @@ import (
     "math/rand"
 )
 
+// ideally, this function would put a solved cube
+// into a random state and then solve it, providing
+// the reverse of the solution as the scramble
+// TODO: implement kociemba algorithm
+func NewScramble() []string {
 var mod = [3]string{"", "'", "2"}
 var x = [2]string{"R", "L"}
 var y = [2]string{"U", "D"}
 var z = [2]string{"F", "B"}
-
-func NewScramble() []string {
 	var s []string
 	curr := -1
 	for i := 0; i < 25; i++ {
