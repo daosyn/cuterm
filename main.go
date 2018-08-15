@@ -34,7 +34,7 @@ func stopStopwatch() {
 	startTime = time.Time{}
 }
 
-func intialize() {
+func initialize() {
 	scramble := scrambler.NewScramble()
 	x := 0 // TODO get x and y from size
 	y := 0
@@ -80,6 +80,6 @@ func main() {
 		panic(err)
 	}
 	defer termbox.Close()
-	intialize()
+	initialize()
 	mainloop()
 }
