@@ -18,12 +18,53 @@ func setCells(x, y int, msg string, fg, bg termbox.Attribute) {
 	termbox.Flush()
 }
 
+func getFaceColor(char rune) termbox.Attribute {
+	switch char {
+	case 'U':
+		return termbox.ColorWhite
+	case 'L':
+		return termbox.ColorMagenta
+	case 'F':
+		return termbox.ColorGreen
+	case 'R':
+		return termbox.ColorRed
+	case 'B':
+		return termbox.ColorBlue
+	case 'D':
+		return termbox.ColorYellow
+	}
+	return termbox.ColorDefault
+}
+
+func drawFace(startx, starty int, face string) {
+	i := 0
+	for x := startx; x < startx+3; x++ {
+		for y := starty; y < starty+3; y++ {
+			facelet := rune(face[i])
+			color := getFaceColor(facelet)
+			termbox.SetCell(x, y, facelet, termbox.ColorBlack, color)
+			i++
+		}
+	}
+}
+
+func displayLayout(layout string) {
+	// U -> R -> F -> D -> L -> B
+	drawFace(3, 0, layout[0:9])
+	drawFace(6, 3, layout[9:18])
+	drawFace(3, 3, layout[18:27])
+	drawFace(3, 6, layout[27:36])
+	drawFace(0, 3, layout[36:45])
+	drawFace(9, 3, layout[45:54])
+	termbox.Flush()
+}
+
 func startStopwatch() {
 	startTime = time.Now()
 	stopTime = time.Time{}
 	go func() {
 		for stopTime.IsZero() {
-			setCells(width/3, height/3, time.Since(startTime).String(), termbox.ColorDefault, termbox.ColorDefault)
+			setCells(width/2, height/3, time.Since(startTime).String(), termbox.ColorDefault, termbox.ColorDefault)
 		}
 	}()
 }
@@ -35,25 +76,25 @@ func stopStopwatch() {
 	startTime = time.Time{}
 }
 
-func initialize() {
-	width, height = termbox.Size()
-
-	x := width/2 - 30
-	y := height/2 - 3
-	scramble := scrambler.NewScramble()
-	for _, s := range scramble {
-		// TODO write to center of screen
-		setCells(x, y, s, termbox.ColorDefault, termbox.ColorDefault)
-		x += 3
-	}
-}
-
 func handleKeyEvent() {
 	if startTime.IsZero() {
 		startStopwatch()
 	} else {
 		stopStopwatch()
 	}
+}
+
+func initialize() {
+	width, height = termbox.Size()
+	x := width/2 - 30
+	y := height / 2
+	scramble := scrambler.NewScramble()
+	for _, s := range scramble {
+		setCells(x, y, s, termbox.ColorDefault, termbox.ColorDefault)
+		x += 3
+	}
+	// displayLayout("UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB")
+	displayLayout("DRLUUBFBRBLURRLRUBLRDDFDLFUFUFFDBRDUBRUFLLFDDBFLUBLRBD")
 }
 
 func mainloop() {

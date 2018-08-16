@@ -1,6 +1,6 @@
 # cuterm
 - [x] generate scramble
-- [ ] display cube layout
+- [x] display cube layout
 - [x] start timer
 - [x] stop timer
 - [ ] keep track of times
