@@ -6,6 +6,8 @@ import (
 	"time"
 )
 
+const coldef = termbox.ColorDefault
+
 var startTime, stopTime time.Time
 var times []time.Duration
 var width, height int
@@ -33,16 +35,17 @@ func getFaceColor(char rune) termbox.Attribute {
 	case 'D':
 		return termbox.ColorYellow
 	}
-	return termbox.ColorDefault
+	return coldef
 }
 
 func drawFace(startx, starty int, face string) {
 	i := 0
+	fg := termbox.ColorBlack
 	for x := startx; x < startx+3; x++ {
 		for y := starty; y < starty+3; y++ {
 			facelet := rune(face[i])
 			color := getFaceColor(facelet)
-			termbox.SetCell(x, y, facelet, termbox.ColorBlack, color)
+			termbox.SetCell(x, y, '#', fg, color)
 			i++
 		}
 	}
@@ -64,7 +67,10 @@ func startStopwatch() {
 	stopTime = time.Time{}
 	go func() {
 		for stopTime.IsZero() {
-			setCells(width/2, height/3, time.Since(startTime).String(), termbox.ColorDefault, termbox.ColorDefault)
+			setCells(
+				width/2, height/3,
+				time.Since(startTime).String(),
+				coldef, coldef)
 		}
 	}()
 }
@@ -90,7 +96,7 @@ func initialize() {
 	y := height / 2
 	scramble := scrambler.NewScramble()
 	for _, s := range scramble {
-		setCells(x, y, s, termbox.ColorDefault, termbox.ColorDefault)
+		setCells(x, y, s, coldef, coldef)
 		x += 3
 	}
 	// displayLayout("UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB")
@@ -109,7 +115,7 @@ func mainloop() {
 			}
 		case termbox.EventResize:
 			// TODO draw everything again
-			termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
+			termbox.Clear(coldef, coldef)
 			width, height = termbox.Size()
 		case termbox.EventError:
 			panic(ev.Err)
