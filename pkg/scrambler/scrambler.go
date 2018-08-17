@@ -1,7 +1,7 @@
 package scrambler
 
 import (
-    "math/rand"
+	"math/rand"
 )
 
 // ideally, this function would put a solved cube
@@ -9,10 +9,10 @@ import (
 // the reverse of the solution as the scramble
 // TODO: implement kociemba algorithm
 func NewScramble() []string {
-var mod = [3]string{"", "'", "2"}
-var x = [2]string{"R", "L"}
-var y = [2]string{"U", "D"}
-var z = [2]string{"F", "B"}
+	var mod = [3]string{"", "'", "2"}
+	var x = [2]string{"R", "L"}
+	var y = [2]string{"U", "D"}
+	var z = [2]string{"F", "B"}
 	var s []string
 	curr := -1
 	for i := 0; i < 25; i++ {
