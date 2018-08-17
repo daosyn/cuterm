@@ -8,22 +8,28 @@ import (
 
 const coldef = termbox.ColorDefault
 
+var scramble []string = scrambler.NewScramble()
+
 var startTime, stopTime time.Time
 var times []time.Duration
+
 var width, height int
 
-func setCells(x, y int, msg string, fg, bg termbox.Attribute) {
+func setCells(x, y int, msg string, fg, bg termbox.Attribute) int {
+    length := 0
 	for _, c := range msg {
 		termbox.SetCell(x, y, c, fg, bg)
+        length++
 		x++
 	}
 	termbox.Flush()
+    return length
 }
 
 func getFaceColor(char rune) termbox.Attribute {
 	switch char {
 	case 'U':
-		return termbox.ColorWhite
+        return termbox.ColorWhite
 	case 'L':
 		return termbox.ColorMagenta
 	case 'F':
@@ -80,6 +86,10 @@ func stopStopwatch() {
 	solveTime := stopTime.Sub(startTime)
 	times = append(times, solveTime)
 	startTime = time.Time{}
+
+    scramble = scrambler.NewScramble()
+    termbox.Clear(coldef, coldef)
+    initialize()
 }
 
 func handleKeyEvent() {
@@ -94,13 +104,17 @@ func initialize() {
 	width, height = termbox.Size()
 	x := width/2 - 30
 	y := height / 2
-	scramble := scrambler.NewScramble()
 	for _, s := range scramble {
-		setCells(x, y, s, coldef, coldef)
-		x += 3
+		length := setCells(x, y, s, coldef, coldef)
+		x += length + 1
 	}
-	// displayLayout("UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB")
-	displayLayout("DRLUUBFBRBLURRLRUBLRDDFDLFUFUFFDBRDUBRUFLLFDDBFLUBLRBD")
+    x = 0
+    y = height - 1
+    for _, solveTime := range times {
+        length := setCells(x, y, solveTime.String(), coldef, coldef)
+        x += length + 1
+    }
+	displayLayout("UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB")
 }
 
 func mainloop() {
@@ -114,9 +128,8 @@ func mainloop() {
 				handleKeyEvent()
 			}
 		case termbox.EventResize:
-			// TODO draw everything again
 			termbox.Clear(coldef, coldef)
-			width, height = termbox.Size()
+            initialize()
 		case termbox.EventError:
 			panic(ev.Err)
 		}
