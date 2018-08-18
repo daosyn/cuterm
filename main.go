@@ -1,14 +1,14 @@
 package main
 
 import (
-	"github.com/daosyn/cuterm/pkg/scrambler"
+	"github.com/daosyn/kociemba"
 	"github.com/nsf/termbox-go"
 	"time"
 )
 
 const coldef = termbox.ColorDefault
 
-var scramble []string = scrambler.NewScramble()
+var scramble []string = kociemba.NewScramble()
 
 var startTime, stopTime time.Time
 var times []time.Duration
@@ -87,7 +87,7 @@ func stopStopwatch() {
 	times = append(times, solveTime)
 	startTime = time.Time{}
 
-	scramble = scrambler.NewScramble()
+	scramble = kociemba.NewScramble()
 	termbox.Clear(coldef, coldef)
 	initialize()
 }
