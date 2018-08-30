@@ -8,8 +8,6 @@ import (
 
 const coldef = termbox.ColorDefault
 
-var scramble []string = kociemba.NewScramble()
-
 var startTime, stopTime time.Time
 var times []time.Duration
 
@@ -75,7 +73,7 @@ func startStopwatch() {
 		for stopTime.IsZero() {
 			setCells(
 				width/2, height/3,
-				time.Since(startTime).String(),
+				time.Since(startTime).Round(time.Millisecond).String(),
 				coldef, coldef)
 		}
 	}()
@@ -83,11 +81,10 @@ func startStopwatch() {
 
 func stopStopwatch() {
 	stopTime = time.Now()
-	solveTime := stopTime.Sub(startTime)
+	solveTime := stopTime.Sub(startTime).Round(time.Millisecond)
 	times = append(times, solveTime)
 	startTime = time.Time{}
 
-	scramble = kociemba.NewScramble()
 	termbox.Clear(coldef, coldef)
 	initialize()
 }
@@ -104,15 +101,17 @@ func initialize() {
 	width, height = termbox.Size()
 	x := width/2 - 30
 	y := height / 2
-	for _, s := range scramble {
+	for _, s := range kociemba.NewScramble() {
 		length := setCells(x, y, s, coldef, coldef)
 		x += length + 1
 	}
 	x = 0
 	y = height - 1
 	for _, solveTime := range times {
-		length := setCells(x, y, solveTime.String(), coldef, coldef)
-		x += length + 1
+        if x < width {
+		    length := setCells(x, y, solveTime.String(), coldef, coldef)
+		    x += length + 1
+        }
 	}
 	displayLayout("UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB")
 }
