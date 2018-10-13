@@ -86,7 +86,7 @@ func stopStopwatch() {
 	startTime = time.Time{}
 
 	termbox.Clear(coldef, coldef)
-	initialize()
+	drawNewScramble()
 }
 
 func handleKeyEvent() {
@@ -97,23 +97,26 @@ func handleKeyEvent() {
 	}
 }
 
-func initialize() {
+func drawNewScramble() {
 	width, height = termbox.Size()
 	x := width/2 - 30
 	y := height / 2
-	for _, s := range kociemba.NewScramble() {
+
+	scramble, layout := kociemba.GetNewScramble()
+	for _, s := range scramble {
 		length := setCells(x, y, s, coldef, coldef)
 		x += length + 1
 	}
+	displayLayout(layout)
+
 	x = 0
 	y = height - 1
 	for _, solveTime := range times {
-        if x < width {
-		    length := setCells(x, y, solveTime.String(), coldef, coldef)
-		    x += length + 1
-        }
+		if x < width {
+			length := setCells(x, y, solveTime.String(), coldef, coldef)
+			x += length + 1
+		}
 	}
-	displayLayout("UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB")
 }
 
 func mainloop() {
@@ -128,7 +131,7 @@ func mainloop() {
 			}
 		case termbox.EventResize:
 			termbox.Clear(coldef, coldef)
-			initialize()
+			drawNewScramble()
 		case termbox.EventError:
 			panic(ev.Err)
 		}
@@ -141,6 +144,6 @@ func main() {
 		panic(err)
 	}
 	defer termbox.Close()
-	initialize()
+	drawNewScramble()
 	mainloop()
 }
