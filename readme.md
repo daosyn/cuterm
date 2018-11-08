@@ -1,9 +1,9 @@
 # cuterm
-- [x] generate scramble
+- [x] generate scramble (currently working on [kociemba](https://github.com/daosyn/kociemba))
 - [x] display cube layout
 - [x] start timer
 - [x] stop timer
-- [ ] keep track of times
+- [x] keep track of times
 - [ ] start inspection timer
 - [ ] hold before start
 - [ ] edit options
